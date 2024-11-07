@@ -111,6 +111,27 @@ Follow these instructions:
 
 Kindly follow the steps highlighted here if you want to use Azure CosmosDB instead: https://learn.microsoft.com/azure/cosmos-db/mongodb/vcore/quickstart-portal?wt.mc_id=studentamb_223887 
 
+## Deploy to Azure App Services
+
+Follow the steps here: https://learn.microsoft.com/azure/app-service/quickstart-nodejs?wt.mc_id=studentamb_223887 
+
+OR
+
+```
+az webapp up --sku F1 --name mpesaqarag --location eastus2 --resource-group openAIExample --debug --runtime "Node - 18-lts"
+```
+
+The az webapp up command does the following actions:
+
+* Create a default resource group.
+
+* Create a default App Service plan.
+
+* Create an app with the specified name.
+
+* Zip deploy all files from the current working directory, with build automation enabled.
+
+* Cache the parameters locally in the .azure/config file so that you don't need to specify them again when deploying later with az webapp up or other az webapp commands from the project folder. The cached values are used automatically by default.
 
 ## Cleaning Up
 Delete the models
