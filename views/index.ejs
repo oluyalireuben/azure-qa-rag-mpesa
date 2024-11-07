@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mpesa for Business Chat</title>
+    <link rel="stylesheet" href="/style/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Guides:wght@400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pacifico&family=Rajdhani:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js" integrity="sha512-6sSYJqDreZRZGkJ3b+YfdhB3MzmuP9R7X1QZ6g5aIXhRvR1Y/N/P47jmnkENm7YL3oqsmI6AK+V6AD99uWDnIw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <div class="header-bar">
+        <div class="header-bar-item">
+            <img src="/assets/mpesa.png" alt="">
+        </div>
+        <div class="header-bar-item">
+            <h1>Mpesa for Business Setup QA RAG</h1>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="chat-container" id="chat-container-box">
+            <div class="warning">
+                <p><i class="fa fa-circle-exclamation"></i> This demo application is not related to Mpesa or Safaricom PLC in any way and content used to produce this demo is from publicly available documents. </p>
+            </div>
+            <!--All chat bubble appear here-->
+            <div class="chat-bubble bot-msg">
+                <p>Hi, I am your open-source Mpesa business question answering assistant!</p>
+            </div>
+        </div>
+
+        <div id="chat-container-input-box">
+            <form id="chat-form">
+                <input id="chat-input" type="text" placeholder="Ask something here">
+                <button>Ask</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("chat-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const input = document.getElementById("chat-input").value.trim();
+            if (input !== "") {
+                const chatContainer = document.getElementById("chat-container-box");
+                
+                // Display user input
+                const userBubble = document.createElement("div");
+                userBubble.className = "chat-bubble human-msg";
+                userBubble.innerHTML = `<p>${input}</p>`;
+                chatContainer.appendChild(userBubble);
+
+                // Clear the input field
+                document.getElementById("chat-input").value = "";
+
+                // Display bot response bubble placeholder
+                const botBubble = document.createElement("div");
+                botBubble.className = "chat-bubble bot-msg";
+                chatContainer.appendChild(botBubble);
+                botBubble.innerHTML = `<div class="chat-loader"></div>`
+
+                try {
+                    // Send the message to the server
+                    const response = await fetch('/app/custom-rag/v1.0/az-openai/runnable-sequence/stream/rag/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chatMsgQ: input })
+                    });
+
+                    if (response.status !== 201) {
+                        console.log(`Response status: ${response.status}`);
+                        botBubble.innerHTML = `<p style="color:rgb(225, 74, 74)">Unable to retrieve response.</p>`;
+                        return;
+                    }
+
+                    // Stream response text character by character
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder("utf-8");
+                    let accumulatedText = "";
+
+                    // Read chunks from the stream
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        // Decode the chunk into a string
+                        const chunk = decoder.decode(value, { stream: true });
+
+                        // Add each character to the chat bubble one by one with a delay
+                        for (let i = 0; i < chunk.length; i++) {
+                            accumulatedText += chunk[i];
+                            botBubble.innerHTML = `<p>${accumulatedText}</p>`; // Update the bot bubble
+
+                            // Scroll to the latest message
+                            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                            // Introduce a small delay for the "typing" effect (adjust the delay as needed)
+                            await new Promise(resolve => setTimeout(resolve, 50));  // 50ms delay per character
+                        }
+                    }
+
+                } catch (error) {
+                    console.error("Fetch error:", error);
+                    botBubble.innerHTML = `<p style="color:rgb(225, 74, 74)"> Unable to connect.</p>`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

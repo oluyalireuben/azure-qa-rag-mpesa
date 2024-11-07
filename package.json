@@ -1,0 +1,33 @@
+{
+  "name": "azure-open-ai-langchain",
+  "version": "1.0.0",
+  "description": "This is a step-by-step tutorial that teaches you how to Azure OpenAI to create a model and use Node.js to interact with it and use its embedding together with a vector store to create a RAG application.",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "upload": "node uploadDocs.js"
+  },
+  "author": "Theophilus Owiti",
+  "license": "MIT",
+  "dependencies": {
+    "@azure/identity": "^4.5.0",
+    "@azure/search-documents": "^12.1.0",
+    "@langchain/azure-cosmosdb": "^0.2.0",
+    "@langchain/community": "^0.3.11",
+    "@langchain/core": "^0.3.17",
+    "@langchain/mongodb": "^0.1.0",
+    "@langchain/openai": "^0.3.11",
+    "colors": "^1.4.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "langchain": "^0.3.5",
+    "mongodb": "^6.10.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
