@@ -4,7 +4,7 @@ In this tutorial we are going to build a Quetion-Answering RAG Chat Web App. We 
 <img src="./public/assets/demo.gif" alt="mpesa QA rag git image" />
 
 ## Getting Started
-1. You will need to make sure you have the following:
+1. You will need to make sure you have the following: 
 
     * Node LTS 18 +
     * Git
