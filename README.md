@@ -2,7 +2,7 @@
 In this tutorial we are going to build a Quetion-Answering RAG Chat Web App. We utilize Node.js and HTML, CSS, JS. We also incorporate Langchain.js + Azure OpenAI + MongoDB Vector Store (MongoDB Search Index). Get a quick look below.
 
 <img src="./public/assets/demo.gif" alt="mpesa QA rag git image" />
-
+ 
 ## Getting Started
 1. You will need to make sure you have the following:
 
